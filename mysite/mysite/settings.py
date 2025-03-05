@@ -14,6 +14,8 @@ import os
 
 from pathlib import Path
 
+from django.conf.global_settings import EMAIL_HOST, EMAIL_HOST_USER, EMAIL_BACKEND
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -136,3 +138,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+EMAIL_HOST = 'smtphz.qiye.163.com'                                 # 用于发送电子邮件的主机
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')         # 自己的邮箱地址
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') # 自己的邮箱密码
+EMAIL_PORT = 465                                            # 用于中定义的SMTP服务器的端口
+EMAIL_USE_SSL = True                                        # 是否使用隐式的安全链接
+
+if EMAIL_HOST_USER is None or EMAIL_HOST_PASSWORD is None:
+    raise Exception('请设置 EMAIL_HOST_USER 和 EMAIL_HOST_PASSWORD 环境变量后再运行该程序！')
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

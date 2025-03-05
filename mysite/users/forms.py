@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 
 class LoginForm(forms.Form):
-    username = forms.CharField(label='用户名', max_length=30, widget=forms.TextInput(attrs={
+    username = forms.CharField(label='用户名', max_length=35, widget=forms.TextInput(attrs={
         'class': 'input', 'placeholder': '用户名/邮箱'
     }))
     password = forms.CharField(label='密码', min_length=6, widget=forms.PasswordInput(attrs={
@@ -19,7 +19,7 @@ class LoginForm(forms.Form):
         return password
 
 class RegisterForm(forms.ModelForm):
-    email = forms.EmailField(label='邮箱', max_length=30, widget=forms.EmailInput(attrs={
+    email = forms.EmailField(label='邮箱', max_length=35, widget=forms.EmailInput(attrs={
         'class': 'input', 'placeholder': '用户名/邮箱'
     }))
     password = forms.CharField(label='密码', min_length=6, widget=forms.PasswordInput(attrs={

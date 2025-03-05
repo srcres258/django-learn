@@ -7,6 +7,8 @@ from django.db.models import Q
 # Create your views here.
 
 from .forms import LoginForm, RegisterForm
+from .models import EmailVerifyRecord
+from utils.email_send import send_register_email
 
 class MyBackend(ModelBackend):
     """邮箱登录注册"""
@@ -36,6 +38,21 @@ def login_view(request):
     context = {'form': form}
     return render(request, 'users/login.html', context)
 
+def active_user(request, active_code):
+    """修改用户状态，比对链接验证码"""
+
+    all_records = EmailVerifyRecord.objects.filter(code=active_code)
+    if all_records:
+        for record in all_records:
+            email = record.email
+            user = User.objects.get(email=email)
+            user.is_staff = True
+            user.save()
+    else:
+        return HttpResponse('链接有误')
+
+    return redirect('users:login')
+
 def register(request):
     """注册视图"""
 
@@ -48,6 +65,9 @@ def register(request):
             new_user.set_password(form.cleaned_data.get('password'))
             new_user.username = form.cleaned_data.get('email')
             new_user.save()
+
+            # 发送激活邮件
+            send_register_email(form.cleaned_data.get('email'), 'register')
 
             return HttpResponse('注册成功')
 
