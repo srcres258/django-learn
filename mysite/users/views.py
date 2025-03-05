@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponse, redirect
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.hashers import make_password
@@ -116,3 +116,7 @@ def forget_pwd_url(request, active_code):
 def user_profile(request):
     user = User.objects.get(username=request.user)
     return render(request, 'users/user_profile.html', {'user': user})
+
+def logout_view(request):
+    logout(request)
+    return redirect('users:login')
