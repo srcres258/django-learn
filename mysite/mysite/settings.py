@@ -14,8 +14,6 @@ import os
 
 from pathlib import Path
 
-from django.conf.global_settings import MEDIA_URL, MEDIA_ROOT
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -33,6 +31,9 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+AUTHENTICATION_BACKENDS = (
+    'users.views.MyBackend', # 注意只有一个元素的话这里**必须**加尾随逗号以视作一个元组，否则 Python 会视其为字符串
+)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -42,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog.apps.BlogConfig', # blog 应用
-    'users.apps.UsersConfig' # users 应用（用户中心）
+    'users.apps.UsersConfig', # users 应用（用户中心）
 ]
 
 MIDDLEWARE = [

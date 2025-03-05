@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 
 class LoginForm(forms.Form):
-    username = forms.CharField(label='用户名', max_length=15, widget=forms.TextInput(attrs={
+    username = forms.CharField(label='用户名', max_length=30, widget=forms.TextInput(attrs={
         'class': 'input', 'placeholder': '用户名/邮箱'
     }))
     password = forms.CharField(label='密码', min_length=6, widget=forms.PasswordInput(attrs={
@@ -19,7 +19,7 @@ class LoginForm(forms.Form):
         return password
 
 class RegisterForm(forms.ModelForm):
-    username = forms.CharField(label='用户名', max_length=15, widget=forms.TextInput(attrs={
+    email = forms.EmailField(label='邮箱', max_length=30, widget=forms.EmailInput(attrs={
         'class': 'input', 'placeholder': '用户名/邮箱'
     }))
     password = forms.CharField(label='密码', min_length=6, widget=forms.PasswordInput(attrs={
@@ -31,16 +31,16 @@ class RegisterForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'password')
+        fields = ('email', 'password')
 
-    def clean_username(self):
+    def clean_email(self):
         """验证用户是否存在"""
 
-        username = self.cleaned_data.get('username')
-        exists = User.objects.filter(username=username).exists()
+        email = self.cleaned_data.get('email')
+        exists = User.objects.filter(email=email).exists()
         if exists:
             raise forms.ValidationError('用户名已经存在！')
-        return username
+        return email
 
     def clean_password1(self):
         """验证密码是否相等"""
