@@ -2,13 +2,14 @@ from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.backends import ModelBackend
-from django.db.models import Q
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 # Create your views here.
 
 from .forms import LoginForm, RegisterForm, ForgetPwdForm, ModifyPwdForm
-from .models import EmailVerifyRecord
+from .models import EmailVerifyRecord, UserProfile
 from utils.email_send import send_register_email
 
 class MyBackend(ModelBackend):
@@ -32,7 +33,8 @@ def login_view(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('/admin')
+                # 登录成功之后跳转到个人中心页面
+                return redirect('users:user_profile')
             else:
                 return HttpResponse('登录失败')
 
@@ -109,3 +111,8 @@ def forget_pwd_url(request, active_code):
         form = ModifyPwdForm()
 
     return render(request, 'users/reset_pwd.html', {'form': form})
+
+@login_required(login_url='users:login')
+def user_profile(request):
+    user = User.objects.get(username=request.user)
+    return render(request, 'users/user_profile.html', {'user': user})
