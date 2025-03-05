@@ -148,4 +148,4 @@ EMAIL_USE_SSL = True                                        # 是否使用隐式
 if EMAIL_HOST_USER is None or EMAIL_HOST_PASSWORD is None:
     raise Exception('请设置 EMAIL_HOST_USER 和 EMAIL_HOST_PASSWORD 环境变量后再运行该程序！')
 
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

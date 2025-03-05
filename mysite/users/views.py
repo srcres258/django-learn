@@ -3,10 +3,11 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
+from django.contrib.auth.hashers import make_password
 
 # Create your views here.
 
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm, ForgetPwdForm, ModifyPwdForm
 from .models import EmailVerifyRecord
 from utils.email_send import send_register_email
 
@@ -73,3 +74,38 @@ def register(request):
 
     context = {'form': form}
     return render(request, 'users/register.html', context)
+
+def forget_pwd(request):
+    if request.method == 'POST':
+        form = ForgetPwdForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            exists = User.objects.filter(email=email).exists()
+            if exists:
+                send_register_email(email, 'forget')
+                return HttpResponse('重置密码邮件已发送，请注意查收！')
+            else:
+                return HttpResponse('邮箱还不存在，请前往注册！')
+    else:
+        form = ForgetPwdForm()
+
+    return render(request, 'users/forget_pwd.html', {'form': form})
+
+def forget_pwd_url(request, active_code):
+    if request.method == 'POST':
+        form = ModifyPwdForm(request.POST)
+        if form.is_valid():
+            record = EmailVerifyRecord.objects.get(code=active_code)
+            email = record.email
+            user = User.objects.get(email=email)
+            user.username = email
+            user.password = make_password(form.cleaned_data.get('password'))
+            user.save()
+
+            return HttpResponse('密码修改成功，请使用新密码登录！')
+        else:
+            return HttpResponse('密码修改失败，验证码错误或密码不符合要求！')
+    else:
+        form = ModifyPwdForm()
+
+    return render(request, 'users/reset_pwd.html', {'form': form})

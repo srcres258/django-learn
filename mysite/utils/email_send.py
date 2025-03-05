@@ -19,10 +19,19 @@ def send_register_email(email, send_type='register'):
     email_record.send_type = send_type
     email_record.save()
 
-    if send_type == 'register':
-        email_title = '博客的注册激活链接'
-        email_body = '请点击下面的链接激活你的账号：http://127.0.0.1:8000/users/active/{0}'.format(code)
+    match send_type:
+        case 'register':
+            email_title = '博客的注册激活链接'
+            email_body = '请点击下面的链接激活你的账号：http://127.0.0.1:8000/users/active/{0}'.format(code)
 
-        send_status = send_mail(email_title, email_body, '2023002089@link.tyut.edu.cn', [email])
-        if send_status:
-            pass
+            send_status = send_mail(email_title, email_body, '2023002089@link.tyut.edu.cn', [email])
+            if send_status:
+                pass
+
+        case 'forget':
+            email_title = '找回密码链接'
+            email_body = '请点击下面的链接修改你的密码：http://127.0.0.1:8000/users/forget_pwd_url/{0}'.format(code)
+
+            send_status = send_mail(email_title, email_body, '2023002089@link.tyut.edu.cn', [email])
+            if send_status:
+                pass
