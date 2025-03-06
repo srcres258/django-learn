@@ -11,4 +11,6 @@ urlpatterns = [
     path('forget_pwd_url/<active_code>', views.forget_pwd_url, name='forget_pwd_url'),
     path('user_profile/', views.user_profile, name='user_profile'),
     path('logout/', views.logout_view, name='logout'),
+
+    path('editor_users/', views.editor_users, name='editor_users') # 编辑用户信息
 ]
