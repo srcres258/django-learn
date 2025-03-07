@@ -26,5 +26,16 @@ def post_detail(request, post_id):
     """文章详情页"""
 
     post = get_object_or_404(Post, id=post_id)
-    context = { 'post': post }
+
+    # # 用文章id来实现的上下篇
+    # prev_post = Post.objects.filter(id__lt=post_id).last() # 上一篇的QuerySet数据
+    # next_post = Post.objects.filter(id__gt=post_id).first() # 下一篇的QuerySet数据
+
+    # 用发布日期来实现的上下篇（两种方法都可以，任选一个即可）
+    prev_post = Post.objects.filter(add_date__lt=post.add_date).last() # 上一篇的QuerySet数据
+    next_post = Post.objects.filter(add_date__gt=post.add_date).first() # 下一篇的QuerySet数据
+
+    # 备注：第一篇及最后一篇是没有上下篇的，需要处理url显示。
+
+    context = { 'post': post, 'prev_post': prev_post, 'next_post': next_post }
     return render(request, 'blog/detail.html', context)

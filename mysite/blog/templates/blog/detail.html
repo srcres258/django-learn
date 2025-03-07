@@ -11,4 +11,23 @@
           {{ post.content|safe }}
         </div>
     </div>
+
+    <div class="box">
+        <div class="level">
+            <div class="level-left">
+                {% if prev_post %} <!-- 备注：第一篇及最后一篇是没有上下篇的，需要处理url显示。 -->
+                    <span>上一篇：</span><a href="{% url 'blog:post_detail' prev_post.id %}" class="level-item">{{ prev_post.title }}</a>
+                {% else %}
+                    <span class="has-text-danger-dark is-size-7">无上一篇</span>
+                {% endif %}
+            </div>
+            <div class="level-right">
+                {% if next_post %}
+                    <span>下一篇：</span><a href="{% url 'blog:post_detail' next_post.id %}" class="level-item">{{ next_post.title }}</a>
+                {% else %}
+                    <span class="has-text-danger-dark is-size-7">无下一篇</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endblock %}
