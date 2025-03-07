@@ -1,9 +1,17 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q, F
+from django.core.paginator import Paginator
 
 from .models import Category, Post
 
-# Create your views here.
+def __page_obj_from_post_list(request, post_list):
+    """分页方法"""
+
+    paginator = Paginator(post_list, 2) # 第二个参数代表每页显示几个
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return page_obj
 
 def index(request):
     """首页"""
@@ -11,7 +19,14 @@ def index(request):
     # 查询首页数据并显示在页面。
     category_list = Category.objects.all() # 查询到所有的分类
     post_list = Post.objects.all() # 查询到所有的文章
-    context = { 'category_list': category_list, 'post_list': post_list }
+
+    # 分页方法
+    page_obj = __page_obj_from_post_list(request, post_list)
+
+    context = {
+        'category_list': category_list,
+        'page_obj': page_obj
+    }
     return render(request, 'blog/index.html', context)
 
 def category_list(request, category_id):
@@ -20,7 +35,10 @@ def category_list(request, category_id):
     # 获取当前分类下的所有文章。
     posts = category.post_set.all()
 
-    context = { 'category': category, 'post_list': posts }
+    # 分页方法
+    page_obj = __page_obj_from_post_list(request, posts)
+
+    context = { 'category': category, 'page_obj': page_obj }
     return render(request, 'blog/list.html', context)
 
 def post_detail(request, post_id):
@@ -56,15 +74,22 @@ def search(request):
         # 没有搜索默认显示所有文章
         post_list = Post.objects.all()
 
+    # 分页方法
+    page_obj = __page_obj_from_post_list(request, post_list)
+
     context = {
-        'post_list': post_list
+        'page_obj': page_obj
     }
     return render(request, 'blog/index.html', context)
 
 def archives(request, year, month):
     post_list = Post.objects.filter(add_date__year=year, add_date__month=month)
+
+    # 分页方法
+    page_obj = __page_obj_from_post_list(request, post_list)
+
     context = {
-        'post_list': post_list,
+        'page_obj': page_obj,
         'year': year,
         'month': month
     }
