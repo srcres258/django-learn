@@ -41,7 +41,7 @@
 
                     {% get_category_list as category_list %}
                     {% for category in category_list %}
-                        <a class="navbar-item">
+                        <a class="navbar-item" href="{% url 'blog:category_list' category.id %}">
                             {{ category.name }}
                         </a>
                     {% endfor %}
@@ -74,12 +74,21 @@
                     {% block navbar-end %}
                     <div class="navbar-item">
                         <div class="buttons">
-                            <a class="button is-primary">
-                                <strong>Sign up</strong>
-                            </a>
-                            <a class="button is-light">
-                                Log in
-                            </a>
+                            {% if user.is_authenticated %} <!-- 判断用户是否登录：user.is_authenticated -->
+                                <div class="buttons">
+                                    <a class="button is-primary" href="{% url 'users:user_profile' %}" target="_blank">
+                                        <strong>{{ request.user.username }}</strong>
+                                    </a>
+                                    <a href="{% url 'users:logout' %}" class="button is-primary">退出</a>
+                                </div>
+                            {% else %}
+                                <a class="button is-primary" href="{% url 'users:register' %}" target="_blank">
+                                    <strong>注册</strong>
+                                </a>
+                                <a class="button is-light" href="{% url 'users:login' %}" target="_blank">
+                                    登录
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                     {% endblock %}
@@ -96,7 +105,7 @@
                     {% for post in post_list %}
                     <div class="box">
                         <h1 class="is-size-5 has-text-weight-bold">
-                            <a href="">{{ post.title }}</a>
+                            <a href="{% url 'blog:post_detail' post.id %}">{{ post.title }}</a>
                         </h1>
                         <div class="is-size-7 has-text-grey-light pt-1 pb-1">
                             <span class="mr-3">作者：{{ post.owner }}</span>

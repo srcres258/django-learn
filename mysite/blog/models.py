@@ -37,6 +37,7 @@ class Post(models.Model):
 
     title = models.CharField(max_length=64, verbose_name='文章标题')
     desc = models.TextField(max_length=256, blank=True, default='', verbose_name='文章描述')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='分类')
     content = models.TextField(verbose_name='文章详情')
     tags = models.ForeignKey(Tag, blank=True, null=True, on_delete=models.CASCADE, verbose_name='文章标签')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='作者')
