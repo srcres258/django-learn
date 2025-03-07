@@ -4,8 +4,9 @@
     <div class="box">
         <h1 class="is-size-5 has-text-weight-bold">{{ post.title }}</h1>
         <div class="is-size-7 has-text-grey-light pt-1 pb-1">
-          <span class="mr-3">作者：{{ post.owner }}</span>
-          <span>发布日期：{{ post.add_date }}</span>
+            <span class="mr-3">作者：{{ post.owner }}</span>
+            <span class="mr-3">发布日期：{{ post.add_date }}</span>
+            <span>浏览量：{{ post.pv }}</span>
         </div>
         <div class="content">
           {{ post.content|safe }}

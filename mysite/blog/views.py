@@ -38,6 +38,9 @@ def post_detail(request, post_id):
 
     # 备注：第一篇及最后一篇是没有上下篇的，需要处理url显示。
 
+    # 增加文章浏览量
+    Post.objects.filter(id=post_id).update(pv=F('pv') + 1) # **注意**：这个功能有漏洞，仅作思路讲解。
+
     context = { 'post': post, 'prev_post': prev_post, 'next_post': next_post }
     return render(request, 'blog/detail.html', context)
 

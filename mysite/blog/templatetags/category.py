@@ -2,16 +2,36 @@
 # 官方文档：https://docs.djangoproject.com/zh-hans/5.1/howto/custom-template-tags/
 
 from django import template
-from blog.models import Category, Sidebar
+from blog.models import Category, Sidebar, Post
 
 register = template.Library()
 
 @register.simple_tag
 def get_category_list():
-    # 全站的分类
+    """全站的分类"""
+
     return Category.objects.all()
 
 @register.simple_tag
 def get_sidebar_list():
-    # 全站的分类
+    """侧边栏"""
+
     return Sidebar.get_sidebar()
+
+@register.simple_tag
+def get_new_post():
+    """最新文章"""
+
+    return Post.objects.order_by('-pub_date')[:8]
+
+@register.simple_tag
+def get_hot_post():
+    """手动热门推荐"""
+
+    return Post.objects.filter(is_hot=True)[:8]
+
+@register.simple_tag
+def get_hot_pv_post():
+    """手动热门推荐"""
+
+    return Post.objects.order_by('-pv')[:8]

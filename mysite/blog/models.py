@@ -34,6 +34,28 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+'''
+实现侧边栏的热门文章模块
+
+1. blog/models.py 中的 Post 模型中添加字段
+
+**思路一**：给文章增加一个 `is_hot` 字段，让用户选择是否为热门，这种可控性比较强，可以做到手动推荐，缺点不够智能，热门文章不一定就真的是热门！
+
+```python
+is_hot = models.BooleanField(default=False, verbose_name='是否热门') # 手动热门推荐
+```
+
+**思路二**：给文章增加一个浏览量计数字段，让根据浏览量从高到低显示，这个比较智能，用浏览量来区分是否为热门。
+
+```python
+pv = models.IntegerField(default=0, verbose_name='浏览量') # 浏览量
+```
+
+2. 迁移数据并将数据同步到数据库（运行 makemigrations 和 migrate 命令）
+
+**每次增减、修改模型字段后都要进行这个操作！**
+'''
+
 class Post(models.Model):
     """文章"""
 
@@ -43,6 +65,9 @@ class Post(models.Model):
     content = models.TextField(verbose_name='文章详情')
     tags = models.ForeignKey(Tag, blank=True, null=True, on_delete=models.CASCADE, verbose_name='文章标签')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='作者')
+    is_hot = models.BooleanField(default=False, verbose_name='是否热门') # 手动热门推荐
+
+    pv = models.IntegerField(default=0, verbose_name='浏览量') # 浏览量
     add_date = models.DateTimeField(auto_now_add=True, verbose_name='添加时间')
     pub_date = models.DateTimeField(auto_now=True, verbose_name='修改时间')
 
