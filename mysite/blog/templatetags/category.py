@@ -35,3 +35,9 @@ def get_hot_pv_post():
     """手动热门推荐"""
 
     return Post.objects.order_by('-pv')[:8]
+
+@register.simple_tag
+def get_archives():
+    """文章归档"""
+
+    return Post.objects.dates('add_date', 'month', order='DESC')[:8]

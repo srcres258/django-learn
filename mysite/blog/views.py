@@ -60,3 +60,12 @@ def search(request):
         'post_list': post_list
     }
     return render(request, 'blog/index.html', context)
+
+def archives(request, year, month):
+    post_list = Post.objects.filter(add_date__year=year, add_date__month=month)
+    context = {
+        'post_list': post_list,
+        'year': year,
+        'month': month
+    }
+    return render(request, 'blog/archives_list.html', context)
