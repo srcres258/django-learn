@@ -1,1 +1,19 @@
-搜索：<input type="text" name="" id="">
+<form action="{% url 'blog:search' %}" method="get">
+    {% csrf_token %}
+<!--    <div class="control has-icons-right">-->
+<!--        <input type="search" class="input" name="keyword" placeholder="Search" value="{{ keyword }}">-->
+<!--        <span class="icon is-small is-right">-->
+<!--            <i class="fas fa-search"></i>-->
+<!--        </span>-->
+<!--    </div>-->
+<!--    <input class="button" type="submit" value="搜索">-->
+
+    <div class="field has-addons">
+        <div class="control is-expanded">
+            <input type="search" class="input" name="keyword" placeholder="Search" value="{{ keyword }}">
+        </div>
+        <div class="control">
+            <input class="button is-primary" type="submit" value="搜索">
+        </div>
+    </div>
+</form>

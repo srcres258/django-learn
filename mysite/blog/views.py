@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.db.models import Q, F
 
 from .models import Category, Post
 
@@ -39,3 +40,20 @@ def post_detail(request, post_id):
 
     context = { 'post': post, 'prev_post': prev_post, 'next_post': next_post }
     return render(request, 'blog/detail.html', context)
+
+def search(request):
+    """搜索视图"""
+
+    keyword = request.GET.get('keyword')
+
+    if keyword:
+        # 包含查询的方法，用Q对象来组合复杂查询， XXX__icontains 他两个之间用的是下划线（__）连接
+        post_list = Post.objects.filter(Q(title__icontains=keyword) | Q(desc__icontains=keyword) | Q(content__icontains=keyword))
+    else:
+        # 没有搜索默认显示所有文章
+        post_list = Post.objects.all()
+
+    context = {
+        'post_list': post_list
+    }
+    return render(request, 'blog/index.html', context)
